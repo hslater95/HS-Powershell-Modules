@@ -13,15 +13,37 @@ function code_module {
     write-host "The module entered cannot be found."
     write-host "Exiting program..."
 }
-
+function main {
+    write-host `n
+    write-host 'module_functions'`n
+    write-host 'user_aliases'`n
+    write-host 'node_functions'`n
+}
+main
 function module_functions {
     write-host `n
     write-host 'create_module' `n
+    write-host 'user_aliases' `n
     write-host 'remove_module' `n
     write-host 'shield_module' `n
+    write-host 'check_user_shields' `n
     write-host 'unshield_module' `n
     write-host 'code_module' `n
     write-host 'rename_module' `n
+ 
+}
+function user_aliases {
+    write-host `n
+    write-host 'mods'`n
+    write-host 'prof'`n
+    write-host 'nfiles'`n
+    write-host 'c'`n
+    write-host 'p'
+    write-host 'n'
+}
+function node_functions {
+    write-host `n
+    write-host 'create_node_file' `n
 }
 
 function check_name($str) {
