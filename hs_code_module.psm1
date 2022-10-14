@@ -1,54 +1,37 @@
 function code_module {
-    get-content "C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1"
-    $profile_content = get-content "C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1"
+    get-content $profile
+    $profile_content = get-content $profile
     write-host `n
     $modname = read-host "Enter module name"
     foreach ($line in $profile_content) {
         if ($line -match $modname) {
-            $modpath = "C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\" + $modname + "\" + $modname + ".psm1"
-            c $modpath
+            $modpath = $mods + "\" + $modname + "\" + $modname + ".psm1"
+            code $modpath
             return
         }
     }
     write-host "The module entered cannot be found."
     write-host "Exiting program..."
 }
-function main {
-    write-host `n
-    write-host 'module_functions'`n
-    write-host 'user_aliases'`n
-    write-host 'node_functions'`n
-}
 main
-function module_functions {
+function mod_functions {
     write-host `n
     write-host 'create_module' `n
-    write-host 'user_aliases' `n
     write-host 'remove_module' `n
-    write-host 'shield_module' `n
-    write-host 'check_user_shields' `n
-    write-host 'unshield_module' `n
     write-host 'code_module' `n
-    write-host 'rename_module' `n
- 
 }
-function user_aliases {
+function aliases {
     write-host `n
-    write-host 'mods'`n
-    write-host 'prof'`n
-    write-host 'nfiles'`n
+    write-host '$mods'`n
+    write-host '$profile'`n
     write-host 'c'`n
     write-host 'p'
     write-host 'n'
 }
-function node_functions {
-    write-host `n
-    write-host 'create_node_file' `n
-}
 
 function check_name($str) {
     $flag = 0
-    $profile_content = get-content "C:\windows\system32\windowspowershell\v1.0\profile.ps1"
+    $profile_content = get-content $profile
     foreach ($line in $profile_content) {
         if ($line -match $str) {
             $flag = 1
@@ -158,4 +141,3 @@ function rename_module {
     add_module_to_profile($new_modname)
 
 }
-
