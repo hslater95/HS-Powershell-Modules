@@ -2,18 +2,19 @@
 This functions creates a user module, stores it in the modules path, 
 adds it to the profile file, and opens it in vs code.
 #>
-
-<#sets the location oto the module path#>
-function mods {set-location "C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules"
+function format_profile() {
+    $profile_content = get-content $profile
+    $updated_profile_content = @()
+    foreach($line in $profile_content) {
+            $updated_profile_content += $line        
+    }
+    set-content -path $profile_path -value $updated_profile_content
+   
 }
-
 <#checks module to see if it contains any improper characters#>
-function contains_improper_characters($str) {
-    function profile_path {return " C:\windows\system32\windowspowershell\v1.0\profile.ps1"}    
-    
+function contains_improper_characters($str) {  
         if ($str -like "*'*") {
-            $x = ($str -like "*'*")
-            return $x 
+            return $true
         }
         $improper_chars = [regex]::new('["!@#\$%\^&\*()\+=`~\?<>\.]')
         $match = $improper_chars.match($str)
@@ -39,7 +40,7 @@ function check_module($str) {
 
 <#Checks to see if this module has already been created or not#>
 function validate_module($str) {
-    mods
+    set-location $mods
     $x = get-childitem -filter 'hs*' 
     foreach ($item in $x) {
         if ($item.name -eq $str) {
@@ -50,10 +51,8 @@ function validate_module($str) {
             return 
             }
             return
-
         }
     }
-
 }
 
 
@@ -103,23 +102,22 @@ function remove_whitespace($str) {
 
 <#creates the module directory and module file from within the module path #>
 function make_module($str) {
-    new-item $str -itemtype directory
-    set-location $str
-    $modfile = $str + ".psm1"
+    set-location $mods
+    $modfolder = $mods + "\" + $str
+    new-item $modfolder -itemtype directory
+    set-location $modfolder
+    $modfile = $modfolder + "\" + $str + ".psm1"
     new-item $modfile -itemtype file
 }
 
 <#Adds the module name to your profile page#>
 function add_module_to_profile($str) {
 $import_str = 'import-module' + " " + $str
-$prof = "C:\windows\system32\windowspowershell\v1.0\profile.ps1"
-add-content $prof $import_str 
+add-content $profile $import_str 
 }
 function open_module_in_vs_code($str) {
-    mods
-$modpath = "C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\" + $str + ".psm1" 
-write-host $modpath
-c $modpath
+$modpath = $mods + "\" + $str + "\" + "$str" + ".psm1" 
+code $modpath
 }
 
 
@@ -153,7 +151,7 @@ function create_module {
     validate_module($modname)
     make_module($modname) 
     add_module_to_profile($modname)
+    format_profile;
     open_module_in_vs_code($modname)
 }
-
 
