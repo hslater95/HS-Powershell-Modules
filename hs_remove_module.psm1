@@ -8,12 +8,8 @@ Allows the user to remove a module at the command line.
 6. restart powershell session
 #>
 
-
-
-
-
 function check_if_mod_exists($str) {
-    mods
+    set-location $mods
     $x = get-childitem
     $flag = 0  
     foreach ($item in $x) {
@@ -26,8 +22,7 @@ function check_if_mod_exists($str) {
 
 }
 function remove_from_profile($str) {
-    $profile_path = "c:\windows\system32\windowspowershell\v1.0\profile.ps1"
-    $profile_content = get-content $profile_path
+    $profile_content = get-content $profile
     $updated_profile_content = @()
     foreach($line in $profile_content) {
         if ($line -notmatch $str) {
@@ -60,8 +55,8 @@ function remove_module {
         return
     }
     <#We have confirmed that the user has entered a valid module. now we can remove it.#>
-    $mod_file = "C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\" + $modname + "\" + $modname + ".psm1"
-    $mod_dir = "C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\" + $modname 
+    $mod_file = $mods + "\" + $modname + "\" + $modname + ".psm1"
+    $mod_dir = $mods + "\" + $modname 
     remove-item $mod_file
     remove-item $mod_dir
     remove_from_profile($modname)
